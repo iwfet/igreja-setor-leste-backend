@@ -118,13 +118,11 @@ export class BaseRepository<T extends Model<T>> {
           });
 
           if (ResultType) {
-            console.log(resultados);
             const transformedResults = resultados.map((result) =>
               plainToClass(ResultType, result, {
                 excludeExtraneousValues: true,
               }),
             );
-            console.log(transformedResults);
             return transformedResults as M[];
           }
           return resultados as M[];
