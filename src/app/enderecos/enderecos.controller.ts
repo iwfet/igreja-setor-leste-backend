@@ -27,7 +27,7 @@ export class EnderecosController {
   }
 
   @Get()
-  findAll(@Req() request: CustomRequest) {
+  findAll() {
     return this.enderecosService.findAll();
   }
 

@@ -14,11 +14,15 @@ import { CreateMembroDto } from './dto/create-membro.dto';
 import { CustomRequest } from 'src/core/custom/custom-request.interface';
 import { Transaction } from 'sequelize';
 import { Public } from '../../core/decorator/public.decorator';
-import { AdminGuard } from '../../core/guards/check-admin.guard';
+import { MembroRepository } from './repository/membro.repository';
+import { UtilDataHora } from '../../core/util/date/utilidades-data-hora';
 
 @Controller('membros')
 export class MembrosController {
-  constructor(private readonly membrosService: MembrosService) {}
+  constructor(
+    private readonly membrosService: MembrosService,
+    private readonly membroRepository: MembroRepository,
+  ) {}
 
   @Post()
   create(
@@ -33,6 +37,18 @@ export class MembrosController {
   findAll(@Req() request: CustomRequest) {
     console.log(request);
     return this.membrosService.findAll();
+  }
+
+  @Get('/aniversariantes-semana')
+  async buscarAniversariantesSemana() {
+    const dataHora = await this.membroRepository.getDataHora();
+    const domingoSemana = UtilDataHora.primeiroDiaDaSemana(dataHora);
+    const sabadoSemana = UtilDataHora.ultimoDiaDaSemana(dataHora);
+
+    return await this.membroRepository.buscarAniversariantesSemana(
+      domingoSemana,
+      sabadoSemana,
+    );
   }
 
   @Get(':id')

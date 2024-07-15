@@ -89,6 +89,17 @@ export class BaseRepository<T extends Model<T>> {
       handleSequelizeError(error, this.entity.name);
     }
   }
+  async getDataHora(): Promise<Date> {
+    try {
+      const result = await this.entity.sequelize.query('select now()', {
+        type: QueryTypes.SELECT,
+      });
+
+      return new Date(result[0]['now']);
+    } catch (error) {
+      handleSequelizeError(error, this.entity.name);
+    }
+  }
 
   async executarQuery<M>(
     queryOptions: QueryOptions,
