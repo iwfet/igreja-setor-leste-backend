@@ -3,6 +3,7 @@ import { MEMBRO_REPOSITORY } from 'src/core/constants';
 import { BaseRepository } from '../../../core/util/repository/base.repository';
 import { Membro } from '../entities/membro.entity';
 import { QueryOptionsBuilder } from '../../../core/util/query/query-options-builder';
+import { BuscarAniversariantesSemana } from '../dto/buscar-aniversariantes-semana.dto';
 
 @Injectable()
 export class MembroRepository extends BaseRepository<Membro> {
@@ -24,6 +25,9 @@ export class MembroRepository extends BaseRepository<Membro> {
       .setParameter('sabado', sabado)
       .build();
 
-    return await this.executarQuery(build);
+    return await this.executarQuery<BuscarAniversariantesSemana>(
+      build,
+      BuscarAniversariantesSemana,
+    );
   }
 }

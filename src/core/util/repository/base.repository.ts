@@ -1,11 +1,11 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Model, ModelCtor } from 'sequelize-typescript';
 import { CountOptions, QueryTypes, Transaction } from 'sequelize';
 import { handleSequelizeError } from './sequelize-error-handler';
-import { Sequelize } from 'sequelize';
 import * as fs from 'fs';
 import * as path from 'path';
 import { QueryOptions } from '../query/query-options';
+import { plainToClass, plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class BaseRepository<T extends Model<T>> {
@@ -118,11 +118,16 @@ export class BaseRepository<T extends Model<T>> {
           });
 
           if (ResultType) {
-            return resultados.map((result) =>
-              Object.assign(new ResultType(), result),
+            console.log(resultados);
+            const transformedResults = resultados.map((result) =>
+              plainToClass(ResultType, result, {
+                excludeExtraneousValues: true,
+              }),
             );
+            console.log(transformedResults);
+            return transformedResults as M[];
           }
-          return resultados;
+          return resultados as M[];
 
         case 'INSERT':
           resultados = await this.entity.sequelize.query(consulta.toString(), {
