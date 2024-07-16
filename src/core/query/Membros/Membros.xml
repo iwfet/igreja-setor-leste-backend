@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queries>
+    <buscarAniversariantesSemana>
+        <![CDATA[
+
+
+     SELECT nome, telefone,celular,membro_id
+     FROM membros
+     WHERE TO_CHAR(data_nascimento, 'MM-DD')
+     BETWEEN TO_CHAR(:domingo::DATE, 'MM-DD')
+     AND TO_CHAR(:sabado::DATE, 'MM-DD')
+
+    ]]>
+    </buscarAniversariantesSemana>
+</queries>

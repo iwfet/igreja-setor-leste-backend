@@ -5,7 +5,8 @@ import { handleSequelizeError } from './sequelize-error-handler';
 import * as fs from 'fs';
 import * as path from 'path';
 import { QueryOptions } from '../query/query-options';
-import { plainToClass, plainToInstance } from 'class-transformer';
+import { plainToClass } from 'class-transformer';
+import * as xml2js from 'xml2js';
 
 @Injectable()
 export class BaseRepository<T extends Model<T>> {
@@ -89,6 +90,7 @@ export class BaseRepository<T extends Model<T>> {
       handleSequelizeError(error, this.entity.name);
     }
   }
+
   async getDataHora(): Promise<Date> {
     try {
       const result = await this.entity.sequelize.query('select now()', {
@@ -174,15 +176,15 @@ export class BaseRepository<T extends Model<T>> {
     }
 
     const fileContent = await fs.promises.readFile(filePath, 'utf8');
-    const queryJson = JSON.parse(fileContent);
+    const queryXml = await this.parseXmlQuery(fileContent);
 
-    if (!queryJson || typeof queryJson !== 'object') {
+    if (!queryXml || !queryXml.queries || !queryXml.queries[fileName]) {
       throw new NotFoundException(`Consulta inválida no arquivo '${filePath}'`);
     }
 
-    const query = queryJson[fileName];
+    const query = queryXml.queries[fileName][0];
 
-    if (!query || typeof query !== 'string') {
+    if (typeof query !== 'string') {
       throw new NotFoundException(`Consulta inválida no arquivo '${filePath}'`);
     }
 
@@ -192,6 +194,11 @@ export class BaseRepository<T extends Model<T>> {
     this.cachedQueries[folder][fileName] = query;
 
     return query;
+  }
+
+  private async parseXmlQuery(xmlContent: string): Promise<any> {
+    const parser = new xml2js.Parser({ explicitArray: false });
+    return await parser.parseStringPromise(xmlContent);
   }
 
   private findQueryFilePath(folder: string): string | null {
@@ -209,7 +216,7 @@ export class BaseRepository<T extends Model<T>> {
           if (result) {
             return result;
           }
-        } else if (stat.isFile() && name === `${folder}.json`) {
+        } else if (stat.isFile() && name === `${folder}.xml`) {
           return fullPath;
         }
       }

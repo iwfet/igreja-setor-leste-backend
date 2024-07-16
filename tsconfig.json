@@ -18,10 +18,11 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
   },
   "include": [
     "src",
-    "src/**/*.json"
+    "src/**/*.json",
+    "src/**/*.xml"
   ]
 }
