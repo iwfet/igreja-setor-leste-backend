@@ -1,19 +1,17 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Req,
-  UseGuards,
 } from '@nestjs/common';
 import { MembrosService } from './membros.service';
 import { CreateMembroDto } from './dto/create-membro.dto';
 import { CustomRequest } from 'src/core/custom/custom-request.interface';
 import { Transaction } from 'sequelize';
-import { Public } from '../../core/decorator/public.decorator';
 import { MembroRepository } from './repository/membro.repository';
 import { UtilDataHora } from '../../core/util/date/utilidades-data-hora';
 

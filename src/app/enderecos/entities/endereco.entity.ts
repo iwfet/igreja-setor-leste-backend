@@ -1,11 +1,11 @@
 import {
-  Model,
+  AutoIncrement,
   Column,
-  Table,
   DataType,
   HasOne,
+  Model,
   PrimaryKey,
-  AutoIncrement,
+  Table,
 } from 'sequelize-typescript';
 import { Familia } from 'src/app/familias/entities/familia.entity';
 

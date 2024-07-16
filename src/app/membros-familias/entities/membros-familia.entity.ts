@@ -1,11 +1,11 @@
 import {
-  Table,
-  Column,
-  Model,
-  ForeignKey,
   BelongsTo,
-  Index,
+  Column,
   DataType,
+  ForeignKey,
+  Index,
+  Model,
+  Table,
 } from 'sequelize-typescript';
 import { Familia } from 'src/app/familias/entities/familia.entity';
 import { Membro } from 'src/app/membros/entities/membro.entity';

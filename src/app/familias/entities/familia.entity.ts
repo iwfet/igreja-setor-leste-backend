@@ -1,13 +1,13 @@
 import {
-  Table,
-  Column,
-  Model,
-  ForeignKey,
-  BelongsTo,
-  HasMany,
-  PrimaryKey,
   AutoIncrement,
+  BelongsTo,
+  Column,
   DataType,
+  ForeignKey,
+  HasMany,
+  Model,
+  PrimaryKey,
+  Table,
   Unique,
 } from 'sequelize-typescript';
 import { Endereco } from 'src/app/enderecos/entities/endereco.entity';

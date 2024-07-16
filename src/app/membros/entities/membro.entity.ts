@@ -1,12 +1,12 @@
 import {
-  Table,
-  Column,
-  Model,
-  HasMany,
-  Unique,
-  DataType,
   BelongsTo,
+  Column,
+  DataType,
   ForeignKey,
+  HasMany,
+  Model,
+  Table,
+  Unique,
 } from 'sequelize-typescript';
 import { Filiacao } from 'src/app/filiacoes/entities/filiacao.entity';
 import { MembroFamilia } from 'src/app/membros-familias/entities/membros-familia.entity';

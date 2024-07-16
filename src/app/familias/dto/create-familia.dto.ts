@@ -1,4 +1,4 @@
-import { IsString, IsInt, MaxLength } from 'class-validator';
+import { IsInt, IsString, MaxLength } from 'class-validator';
 
 export class CreateFamiliaDto {
   @IsString()

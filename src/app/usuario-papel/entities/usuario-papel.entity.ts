@@ -1,11 +1,4 @@
-import {
-  Table,
-  Column,
-  Model,
-  ForeignKey,
-  Index,
-  BelongsTo,
-} from 'sequelize-typescript';
+import { Column, ForeignKey, Index, Model, Table } from 'sequelize-typescript';
 import { Papel } from 'src/app/papel/entities/papel.entity';
 import { Usuario } from 'src/app/usuarios/entities/usuario.entity';
 

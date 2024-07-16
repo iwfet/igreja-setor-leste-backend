@@ -1,19 +1,17 @@
 import {
-  Table,
+  AutoIncrement,
+  BelongsTo,
   Column,
+  DataType,
+  ForeignKey,
+  HasMany,
   Model,
   PrimaryKey,
-  AutoIncrement,
-  HasMany,
-  DataType,
-  BelongsTo,
-  ForeignKey,
+  Table,
   Unique,
-  BelongsToMany,
 } from 'sequelize-typescript';
 import { UsuarioPapel } from 'src/app/usuario-papel/entities/usuario-papel.entity';
 import { Membro } from '../../membros/entities/membro.entity';
-import { Papel } from '../../papel/entities/papel.entity';
 
 @Table({ tableName: 'usuarios' })
 export class Usuario extends Model<Usuario> {

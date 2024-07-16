@@ -10,6 +10,7 @@ export class UtilDataHora {
     dataFimSemana.setDate(data.getDate() + (6 - data.getDay()));
     return dataFimSemana;
   }
+
   static proximoSabado(dataString: string) {
     const hoje = new Date(dataString);
     const proximoSabado = new Date();
@@ -22,7 +23,6 @@ export class UtilDataHora {
     return hoje.toLocaleString('pt-BR');
   }
 
-  // Método estático para calcular a diferença em horas entre duas datas
   static diferencaEmHoras(data1, data2) {
     const diffEmMs = Math.abs(data2 - data1);
     const horas = Math.floor(diffEmMs / (1000 * 60 * 60));

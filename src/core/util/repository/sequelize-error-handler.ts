@@ -1,8 +1,8 @@
 import { BadRequestException, ConflictException } from '@nestjs/common';
 import {
-  ValidationError,
-  UniqueConstraintError,
   ForeignKeyConstraintError,
+  UniqueConstraintError,
+  ValidationError,
 } from 'sequelize';
 
 export function handleSequelizeError(error: any, entity: string): void {
