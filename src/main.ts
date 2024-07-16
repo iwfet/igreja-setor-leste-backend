@@ -8,7 +8,7 @@ async function bootstrap() {
   const logger = new Logger('App');
 
 
-  app.setGlobalPrefix('api')
+  app.setGlobalPrefix('api');
 
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe());

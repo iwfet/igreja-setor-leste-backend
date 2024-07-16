@@ -12,7 +12,9 @@ import * as xml2js from 'xml2js';
 export class BaseRepository<T extends Model<T>> {
   private cachedQueries: { [key: string]: { [key: string]: string } } = {};
 
-  constructor(private readonly entity: ModelCtor<T>) {}
+  constructor(private readonly entity: ModelCtor<T>) {
+    this.loadAllQueries();
+  }
 
   async create(createDto: any, transaction: Transaction): Promise<T> {
     try {
@@ -162,6 +164,38 @@ export class BaseRepository<T extends Model<T>> {
     }
   }
 
+  private async loadAllQueries(): Promise<void> {
+    const baseDir = path.join(__dirname, '../../..', 'core/query');
+
+    const loadQueriesFromDirectory = async (directory: string) => {
+      const filesAndFolders = await fs.promises.readdir(directory);
+
+      for (const name of filesAndFolders) {
+        const fullPath = path.join(directory, name);
+        const stat = await fs.promises.stat(fullPath);
+
+        if (stat.isDirectory()) {
+          await loadQueriesFromDirectory(fullPath);
+        } else if (stat.isFile() && fullPath.endsWith('.xml')) {
+          const folder = path.basename(fullPath, '.xml');
+          const fileContent = await fs.promises.readFile(fullPath, 'utf8');
+          const queryXml = await this.parseXmlQuery(fileContent);
+
+          if (queryXml && queryXml.queries) {
+            this.cachedQueries[folder] = {};
+            for (const [key, value] of Object.entries(queryXml.queries)) {
+              if (typeof value === 'string') {
+                this.cachedQueries[folder][key] = value;
+              }
+            }
+          }
+        }
+      }
+    };
+
+    await loadQueriesFromDirectory(baseDir);
+  }
+
   private async getQueryFromPath(nomeConsulta: string): Promise<string> {
     const [folder, fileName] = nomeConsulta.split('.');
 
@@ -169,60 +203,11 @@ export class BaseRepository<T extends Model<T>> {
       return this.cachedQueries[folder][fileName];
     }
 
-    const filePath = this.findQueryFilePath(folder);
-
-    if (!filePath) {
-      throw new NotFoundException(`Consulta '${nomeConsulta}' não encontrada`);
-    }
-
-    const fileContent = await fs.promises.readFile(filePath, 'utf8');
-    const queryXml = await this.parseXmlQuery(fileContent);
-
-    if (!queryXml || !queryXml.queries || !queryXml.queries[fileName]) {
-      throw new NotFoundException(`Consulta inválida no arquivo '${filePath}'`);
-    }
-
-    const query = queryXml.queries[fileName][0];
-
-    if (typeof query !== 'string') {
-      throw new NotFoundException(`Consulta inválida no arquivo '${filePath}'`);
-    }
-
-    if (!this.cachedQueries[folder]) {
-      this.cachedQueries[folder] = {};
-    }
-    this.cachedQueries[folder][fileName] = query;
-
-    return query;
+    throw new NotFoundException(`Consulta '${nomeConsulta}' não encontrada`);
   }
 
   private async parseXmlQuery(xmlContent: string): Promise<any> {
     const parser = new xml2js.Parser({ explicitArray: false });
     return await parser.parseStringPromise(xmlContent);
-  }
-
-  private findQueryFilePath(folder: string): string | null {
-    const baseDir = path.join(__dirname, '../..', 'query');
-
-    function searchDirectory(directory: string): string | null {
-      const filesAndFolders = fs.readdirSync(directory);
-
-      for (const name of filesAndFolders) {
-        const fullPath = path.join(directory, name);
-        const stat = fs.statSync(fullPath);
-
-        if (stat.isDirectory()) {
-          const result = searchDirectory(fullPath);
-          if (result) {
-            return result;
-          }
-        } else if (stat.isFile() && name === `${folder}.xml`) {
-          return fullPath;
-        }
-      }
-      return null;
-    }
-
-    return searchDirectory(baseDir);
   }
 }

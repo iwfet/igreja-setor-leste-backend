@@ -1,9 +1,9 @@
 import {
+  CallHandler,
+  ExecutionContext,
+  Inject,
   Injectable,
   NestInterceptor,
-  ExecutionContext,
-  CallHandler,
-  Inject,
 } from '@nestjs/common';
 import { Observable, throwError } from 'rxjs';
 import { Sequelize } from 'sequelize-typescript';

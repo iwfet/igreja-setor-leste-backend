@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Exponha a porta que o NestJS usa
-EXPOSE 3000
+EXPOSE 5000
 
 # Comando para rodar o aplicativo
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "start:dev"]

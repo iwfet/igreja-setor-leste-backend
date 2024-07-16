@@ -18,11 +18,12 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "resolveJsonModule": true,
+    "allowUnreachableCode": true,
+    "resolveJsonModule": true
   },
   "include": [
     "src",
     "src/**/*.json",
-    "src/**/*.xml"
+    "src/core/query/**/*.xml"
   ]
 }
