@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queries>
+    <buscarTelasUsuario>
+        <![CDATA[
+        select t.*
+        from usuario_papel up ,
+            papel_permissao_tela ppt ,
+            telas t
+        where up.usuario_id = :id
+        and ppt .papel_id  = up.papel_id
+        and t.tela_id = ppt.tela_id
+        and t.ativo = true
+    ]]>
+    </buscarTelasUsuario>
+
+    <buscarTelasAtivas>
+        <![CDATA[
+        select * from telas  where ativo = true
+    ]]>
+    </buscarTelasAtivas>
+</queries>

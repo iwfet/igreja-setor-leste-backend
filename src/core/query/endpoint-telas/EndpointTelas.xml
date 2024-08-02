@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queries>
+    <buscarEndpointUsuario>
+        <![CDATA[
+        select et.endpoint
+        from usuario_papel up ,
+        papel_permissao_tela ppt ,
+        telas t ,
+        endpoint_telas et
+        where up.usuario_id = :id
+        and ppt .papel_id  = up.papel_id
+        and t.tela_id = ppt.tela_id
+        and et.tela_id  = t.tela_id
+    ]]>
+    </buscarEndpointUsuario>
+</queries>
