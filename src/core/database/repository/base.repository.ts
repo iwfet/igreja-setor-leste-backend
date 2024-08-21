@@ -163,7 +163,6 @@ export class BaseRepository<T extends Model<T>> {
           );
       }
     } catch (error) {
-      // console.log(error);
       handleSequelizeError(error, this.entity.name);
     }
   }
@@ -186,7 +185,9 @@ export class BaseRepository<T extends Model<T>> {
           const queryXml = await this.parseXmlQuery(fileContent);
 
           if (queryXml && queryXml.queries) {
-            this.cachedQueries[folder] = {};
+            if (!this.cachedQueries[folder]) {
+              this.cachedQueries[folder] = {};
+            }
             for (const [key, value] of Object.entries(queryXml.queries)) {
               if (typeof value === 'string') {
                 this.cachedQueries[folder][key] = value;
@@ -199,12 +200,19 @@ export class BaseRepository<T extends Model<T>> {
 
     await loadQueriesFromDirectory(baseDir);
   }
+  private async reloadQueries(): Promise<void> {
+    this.cachedQueries = {};
+    await this.loadAllQueries();
+  }
 
   private async getQueryFromPath(nomeConsulta: string): Promise<string> {
     const [folder, fileName] = nomeConsulta.split('.');
-
-    if (this.cachedQueries[folder] && this.cachedQueries[folder][fileName]) {
-      return this.cachedQueries[folder][fileName];
+    if (!this.cachedQueries[folder]) {
+      await this.reloadQueries();
+    }
+    const folderCopy = { ...this.cachedQueries };
+    if (folderCopy[folder] && folderCopy[folder][fileName]) {
+      return folderCopy[folder][fileName];
     }
 
     throw new NotFoundException(`Consulta '${nomeConsulta}' não encontrada`);
